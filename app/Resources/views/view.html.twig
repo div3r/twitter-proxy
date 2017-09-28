@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	
+	<div class="container">
+
+		<br />
+		<h4 class="text-center">Tweets for: @{{username}}</h4>
+		<br />
+
+        {% for tweet in tweets %}
+
+           <p>{{ tweet.body }}</p>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

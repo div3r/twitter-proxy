@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+
+        {% block search %}
+
+            {% block search_row %}
+                {% spaceless %}
+                {{ form_start(search, {'attr' : {'class' : 'form-inline my-2 my-lg-0'} }) }}
+                {{- form_widget(search) -}}
+                {{ form_end(search) }}
+                {% endspaceless %}
+            {% endblock search_row %}
+
+        {% endblock %}
+
+    </div>
+
+    <div class="container">
+        <br />
+        <p>Users in database:</p>
+
+        {% for user in users %}
+
+           <p><a href="{{ path('view_user', {'slug': user.username}) }}"> {{ user.username }} </a></p>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

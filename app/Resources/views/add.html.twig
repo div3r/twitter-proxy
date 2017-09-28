@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	
+	<div class="container">
+
+		{% if error %}
+		    <p>Twitter username does not exist.</p>
+		{% else %}
+		    <p>User: @{{ slug }} has been added</p>
+		{% endif %}
+
+		
+
+	</div>
+
+{% endblock %}

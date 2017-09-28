@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	
+	<div class="container">
+
+		<p>Search results for: @{{ username }}</p>
+
+		{% for tweet in searchResults %}
+            <p>{{ tweet.body }} </p>
+        {% endfor %}
+        <br />
+        {% if maxPages > 1 %}
+            <ul class="pagination pagination-sm">
+                {# `«` arrow  #}
+                <li {{ thisPage == 1 ? 'class="page-item disabled"' : 'class="page-item"' }}>
+                    <a href="{{ app.request.uri }}&page={{ thisPage-1 < 1 ? 1 : thisPage-1 }}"  class="page-link">«</a>
+                </li>
+
+                {# Render each page number #}
+                {% for i in 1..maxPages %}
+                    <li {{ thisPage == i ? 'class="page-item active"'  : 'class="page-item"'}}>
+                        <a href="{{ app.request.uri }}&page={{ i }}" class="page-link">{{ i }}</a>
+                    </li>
+                {% endfor %}
+
+                {# `»` arrow #}
+                <li {{ thisPage == maxPages ? 'class="page-item disabled"' : 'class="page-item"' }}>
+                    <a href="{{ app.request.uri }}&page={{ thisPage+1 <= maxPages ? thisPage+1 : thisPage }}" class="page-link">»</a>
+                </li>
+            </ul>
+        {% endif %}
+
+
+	</div>
+
+{% endblock %}
