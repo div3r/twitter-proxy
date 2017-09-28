@@ -22,18 +22,15 @@ class AddUser extends AbstractType
 
     public function processForm(Request $request)
     {
-
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
         }
 
         return $this->render('task/new.html.twig', array(
             'form' => $form->createView(),
         ));
-
     }
 }

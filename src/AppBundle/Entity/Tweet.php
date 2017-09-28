@@ -30,7 +30,7 @@ class Tweet
 
     /**
      * @var User
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="tweets")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -83,6 +83,4 @@ class Tweet
 
         return $this;
     }
-
 }
-

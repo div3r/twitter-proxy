@@ -132,4 +132,3 @@ class User
         return $this->tweets;
     }
 }
-

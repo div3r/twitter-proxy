@@ -10,15 +10,13 @@ class TwitterProxy
     private $apiExchange;
     private $tweetsNumber;
 
-    public function __construct
-    (
+    public function __construct(
         $token,
         $tokenSecret,
         $consumerKey,
         $consumerSecret,
-		$fetch_tweets
-    )
-    {
+        $fetch_tweets
+    ) {
         $this->apiExchange = new \TwitterAPIExchange([
             'oauth_access_token' => $token,
             'oauth_access_token_secret' => $tokenSecret,
@@ -46,18 +44,14 @@ class TwitterProxy
         $string = json_decode($this->apiExchange
             ->setGetField($getField)
             ->buildOauth(static::URL, static::METHOD)
-            ->performRequest(),$assoc = TRUE);
+            ->performRequest(), $assoc = true);
 
-        if(isset($string["errors"]))
-        {
+        if (isset($string["errors"])) {
             $ctrl = false;
-        }
-        else
-        {
+        } else {
             $ctrl = true;
         }
 
         return $ctrl;
     }
 }
-

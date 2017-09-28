@@ -20,7 +20,7 @@ $twitter = new TwitterAPIExchange($settings);
 $tweets = $twitter->setGetfield($getfield)
     ->buildOauth($url, $requestMethod)
     ->performRequest();
-	
+    
 /*$string = json_decode($twitter->setGetfield($getfield)
 ->buildOauth($url, $requestMethod)
 ->performRequest(),$assoc = TRUE);
@@ -37,6 +37,5 @@ foreach($string as $items)
     }
 */
 echo '<pre>';
-var_dump(json_decode ($tweets));
+var_dump(json_decode($tweets));
 echo '<pre>';
-?>

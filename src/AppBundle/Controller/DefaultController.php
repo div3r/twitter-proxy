@@ -28,72 +28,37 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         $repository = $this->getDoctrine()->getRepository(User::class);
 
         $users = $repository->findAll();
 
-		$form = $this->AddUserForm();
+        $form = $this->AddUserForm();
         $search = $this->AddSearchForm();
 
 
         if ($request->request->has('addUserForm')) {
-
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-
                 $task = $form->getData();
                 $error = false;
                 return $this->redirectToRoute('add_user', [
                     'slug' => $task['search'],
                 ]);
             }
-        }
-        else if ($request->request->has('searchForm')) 
-        {
-
-            /*$search->handleRequest($request);
-
-            if($search->isSubmitted() && $search->isValid()){
-
-                $searchData = $search->getData();
-                return $this->redirectToRoute('search', [
-                    'keyword' => $searchData['search'],
-                    'user' => $searchData['user']->getId(),
-                    'page' => $searchData['page'],
-                ]);
-            } */
-
+        } elseif ($request->request->has('searchForm')) {
             $search->handleRequest($request);
 
             if ($search->isSubmitted() && $search->isValid()) {
-
                 $data = $search->getData();
                 
-
-
-                
-                /*return $this->render('search.html.twig', [
-                    'form' => $form->createView(),
-                    'searchResults' => $paginator,
-                    'maxPages' => $maxPages,
-                    'thisPage' => $data['page'],
-                    'username' => $data['user']->getUsername() ,
-                    'keyword' => $data['search'],
-                    'user' => $data['user']->getId(),
-                    'page' => $data['page'],
-                ]);*/
                 return $this->redirectToRoute('search', [
                     'keyword' => $data['search'],
                     'user' => $data['user']->getId(),
                     'page' => $data['page'],
                 ]);
             }
-
-
-        }
-        else {
+        } else {
             return $this->render('default/index.html.twig', [
                 'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
                 'form' => $form->createView(),
@@ -101,58 +66,15 @@ class DefaultController extends Controller
                 'users' => $users,
             ]);
         }
-
-       
     }
-	
-	/**
-	* Matches /*
-	*
-	* @Route("/search/{user}/{keyword}/{page}", name="search")
-	*/
-	public function search($user, $keyword, $page, Request $request)
+    
+    /**
+    * Matches /*
+    *
+    * @Route("/search/{user}/{keyword}/{page}", name="search")
+    */
+    public function search($user, $keyword, $page, Request $request)
     {
-        dump($request); die;
-    	/*$qb = $this->getDoctrine()->getManager()->getRepository(\AppBundle\Entity\Tweet::class)->createQueryBuilder('o');
-
-        $qb->where('o.body LIKE :search');
-        $qb->setParameter('search', '%' . $keyword . '%');
-
-        if (1) {
-            $qb->andWhere('o.user = :user');
-            $qb->setParameter('user', $user);
-        }
-
-        $result = $qb
-       ->getQuery()
-       ->getResult();	
-
-        $repository = $this->getDoctrine()->getRepository(User::class);
-
-
-		$form = $this->AddUserForm();
-		$form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-			
-			$task = $form->getData();
-			
-			return $this->redirectToRoute('add_user', [
-                'slug' => $task['search'],
-            ]);
-		}
-		else 
-		{
-            $user = $repository->findOneBy(array('id' => $user));
-
-			return $this->render('search.html.twig', [
-				'form' => $form->createView(),
-				'results' => $result,
-                'username' => $user->getUsername(),
-			]);
-		}*/
-	//        $currentPage = $request->get('page', 1);
-
         $queryBuilder = $this->getDoctrine()
             ->getManager()
             ->getRepository(\AppBundle\Entity\Tweet::class)
@@ -177,20 +99,16 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $task = $form->getData();
             
             return $this->redirectToRoute('add_user', [
                 'slug' => $task['search'],
             ]);
-        }
-        else 
-        {
-
+        } else {
             $repository = $this->getDoctrine()->getRepository(User::class);
             $user = $repository->findOneBy(array('id' => $user));
 
-            return $this->redirectToRoute('search', [
+            return $this->render('search.html.twig', [
                 'keyword' => $keyword,
                 'user' => $user->getId(),
                 'page' => $page,
@@ -221,22 +139,18 @@ class DefaultController extends Controller
      */
     public function viewAction($slug, Request $request)
     {
-
         $twits = $this->showTweets($slug);
 
         $form = $this->AddUserForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $task = $form->getData();
             
             return $this->redirectToRoute('add_user', [
                 'slug' => $task['search'],
             ]);
-        }
-        else 
-        {
+        } else {
             return $this->render('view.html.twig', [
                 'form' => $form->createView(),
                 'tweets' => $twits,
@@ -254,48 +168,42 @@ class DefaultController extends Controller
     {
         $error = $this->validateUserAction($slug);
         
-        $form = $this->AddUserForm();	
-		$form->handleRequest($request);
+        $form = $this->AddUserForm();
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-			
-			$task = $form->getData();
-			
-			return $this->redirectToRoute('add_user', [
+            $task = $form->getData();
+            
+            return $this->redirectToRoute('add_user', [
                 'slug' => $task['search'],
             ]);
-		}
-		else 
-		{
-			return $this->render('add.html.twig', array(
-				'slug' => $slug,
-				'form' => $form->createView(),
-				'error' => $error
-			));
-		}
+        } else {
+            return $this->render('add.html.twig', array(
+                'slug' => $slug,
+                'form' => $form->createView(),
+                'error' => $error
+            ));
+        }
     }
 
-	
-	
-	
-	
-	public function validateUserAction($slug){
-		
-		$proxy = $this->get(\AppBundle\Service\TwitterProxy::class);
+    
+    
+    
+    
+    public function validateUserAction($slug)
+    {
+        $proxy = $this->get(\AppBundle\Service\TwitterProxy::class);
 
-        if($proxy->userExists($slug))
-        {
-			$this->saveUserAction($slug);
+        if ($proxy->userExists($slug)) {
+            $this->saveUserAction($slug);
 
             return false;
-        }
-        else
-		{
+        } else {
             /*$user = new User();*/
             return true;
         }
-	}
-	
+    }
+    
     public function saveUserAction($slug)
     {
         $em = $this->getDoctrine()->getManager();
@@ -305,7 +213,7 @@ class DefaultController extends Controller
         $user->setUsername($slug); //$user->setUsername('webcampzagreb');
         $user->setCreated(new \DateTime());
 
-        foreach(json_decode($proxy->getTweets($slug)) as $actualTweet) {
+        foreach (json_decode($proxy->getTweets($slug)) as $actualTweet) {
             $tweet = new Tweet();
             $tweet->setBody($actualTweet->text);
             $tweet->setUser($user);
@@ -319,20 +227,22 @@ class DefaultController extends Controller
 
         return 'success';
     }
-	
-	public function AddUserForm()
+    
+    public function AddUserForm()
     {
         return $this->get('form.factory')->createNamedBuilder('addUserForm')
-			->setMethod('POST')
+            ->setMethod('POST')
             ->add('search', TextType::class, array('label' => false, 'attr' => array('class' => 'form-control mr-sm-2')))
             ->add('save', SubmitType::class, array('label' => 'Add user', 'attr' => array('class' => 'btn btn-outline-success my-2 my-sm-0')))
             ->getForm();
-
     }
 
     public function AddSearchForm()
     {
-        return $this->get('form.factory')->createNamedBuilder('searchForm', FormType::class, [],
+        return $this->get('form.factory')->createNamedBuilder(
+            'searchForm',
+            FormType::class,
+            [],
             [
                 #'method' => 'GET',
                 'csrf_protection' => false,
@@ -346,7 +256,6 @@ class DefaultController extends Controller
             ->add('page', HiddenType::class, ['empty_data' => 1])
             ->add('submit', SubmitType::class, array('label' => 'SEARCH', 'attr' => array('class' => 'btn btn-outline-success my-2 my-sm-0')))
             ->getForm();
-
     }
 
     public function showTweets($slug)
@@ -357,11 +266,10 @@ class DefaultController extends Controller
 
         $tweets = $user->getTweets();
 
-/*foreach ($tweets as $key => $value) {
-            dump($value);
-        }        dump($tweets); die;*/
+        /*foreach ($tweets as $key => $value) {
+                    dump($value);
+                }        dump($tweets); die;*/
 
         return $tweets;
-
     }
 }
